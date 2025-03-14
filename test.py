@@ -55,17 +55,18 @@ class TestResult:
         return self.failure is None
 
     def __str__(self):
+        expected_analyzers = self.test_case.metadata()["expected_analyzers"];
         if self.is_success():
             if self.test_type == "normal":
-                return "\u001b[32;1mSUCCESS       \u001b[0m  {}".format(self.test_case.path)
+                return "\u001b[32;1mSUCCESS       \u001b[0m  {} {}".format(self.test_case.path, expected_analyzers)
             elif self.test_type == "fp":
-                return "\u001b[33;1mFALSE-POSITIVE\u001b[0m  {}".format(self.test_case.path)
+                return "\u001b[33;1mFALSE-POSITIVE\u001b[0m  {} {}".format(self.test_case.path, expected_analyzers)
             elif self.test_type == "fn":
-                return "\u001b[33;1mFALSE-NEGATIVE\u001b[0m  {}".format(self.test_case.path)
+                return "\u001b[33;1mFALSE-NEGATIVE\u001b[0m  {} {}".format(self.test_case.path, expected_analyzers)
             else:
                 raise Exception("Unknown test_type {}".format(self.test_type))
         else:
-            return "\u001b[31;1mFAIL          \u001b[0m  {}\n{}".format(self.test_case.path, self.failure)
+            return "\u001b[31;1mFAIL          \u001b[0m  {} {}\n{}".format(self.test_case.path, expected_analyzers, self.failure)
 
 
 def extract_analyzer_name(report):

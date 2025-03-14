@@ -1,0 +1,39 @@
+[source.crates-io]
+# To use sparse index, change 'rsproxy' to 'rsproxy-sparse'
+replace-with = 'rsproxy'
+# replace-with = 'rsproxy-sparse'
+
+[source.rsproxy]
+registry = "https://rsproxy.cn/crates.io-index"
+[source.rsproxy-sparse]
+registry = "sparse+https://rsproxy.cn/index/"
+
+[registries.rsproxy]
+index = "https://rsproxy.cn/crates.io-index"
+
+[registries]
+ktra = { index = "ssh://git@gitee.com/ZIP97/ktra-cargo-registry.git" }
+# ktra = { index = "https://gitee.com/ZIP97/ktra-cargo-registry.git" }
+
+# [registry]
+# default = "ktra"
+
+[net]
+git-fetch-with-cli = true
+
+[http]
+# proxy = "http://0.0.0.0:7897"
+# proxy = ""
+
+[build]
+rustc-wrapper = "/root/.cargo/bin/sccache"
+# rustflags = ["-Clink-arg=-fuse-ld=mold", "-Zthreads=4"]
+# rustflags = ["-Clink-arg=-fuse-ld=mold"]
+# rustflags = ["-Zthreads=4"]
+
+# [unstable]
+# codegen-backend = true
+#
+# [profile.dev]
+# debug = 1
+# codegen-backend = "cranelift"

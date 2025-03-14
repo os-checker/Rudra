@@ -74,6 +74,7 @@ impl<'a, G: Graph, T: GraphTaint> TaintAnalyzer<'a, G, T> {
 
     // Checks reachability between `self.sources` & `self.sinks`.
     pub fn propagate(&self) -> T {
+        println!("TaintAnalyzer len: {}", self.len);
         let mut taint_state = vec![T::default(); self.len];
         let mut work_list = VecDeque::new();
 
@@ -86,8 +87,8 @@ impl<'a, G: Graph, T: GraphTaint> TaintAnalyzer<'a, G, T> {
         }
 
         // Breadth-first propagation
-        while let Some(current) = work_list.pop_front() {
-            for next in self.graph.next(current) {
+        while let Some(current) = dbg!(&mut work_list).pop_front() {
+            for next in dbg!(self.graph.next(current)) {
                 let mut next_state = std::mem::take(&mut taint_state[next]);
                 let taint = &taint_state[current];
                 if !next_state.contains(taint) {
