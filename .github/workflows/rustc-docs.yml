@@ -12,6 +12,7 @@ jobs:
     # Specify runner +  build & upload the static files as an artifact
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
       - name: Download rustc docs
         id: build
         run: |
@@ -20,12 +21,13 @@ jobs:
           rustup component add rustc-docs
           ls -alh ~/.rustup/toolchains/nightly-2021-10-21-x86_64-unknown-linux-gnu/share/doc/rust/html
           ls -alh ~/.rustup/toolchains/nightly-2021-10-21-x86_64-unknown-linux-gnu/share/doc/rust/html/rustc
+          mv ~/.rustup/toolchains/nightly-2021-10-21-x86_64-unknown-linux-gnu/share/doc/rust/html/rustc rustc -r
 
       - name: Upload static files as artifact
         id: deployment
         uses: actions/upload-pages-artifact@v3 # or specific "vX.X.X" version tag for this action
         with:
-          path: ~/.rustup/toolchains/nightly-2021-10-21-x86_64-unknown-linux-gnu/share/doc/rust/html
+          path: rustc
 
   # Deployment job
   deploy:
