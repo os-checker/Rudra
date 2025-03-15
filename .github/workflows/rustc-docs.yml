@@ -13,6 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download rustc docs
+        id: build
         run: |
           rustup install ${{ env.TOOLCHAIN }} --profile minimal
           rustup default ${{ env.TOOLCHAIN }}
