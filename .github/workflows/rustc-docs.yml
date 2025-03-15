@@ -18,6 +18,9 @@ jobs:
           mkdir doc
           # /rudra/index.html
           mv .github/index.html doc
+
+          # no sccache in runner
+          rm .cargo -r
           cargo doc --document-private-items --no-deps
           # /rudra/rudra/index.html
           mv target/doc doc/rudra
