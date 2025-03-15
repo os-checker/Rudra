@@ -1,0 +1,43 @@
+name: Deploy rustc-docs
+
+on:
+  push:
+
+env:
+  TOOLCHAIN: nightly-2021-10-21
+
+jobs:
+  # Build job
+  build:
+    # Specify runner +  build & upload the static files as an artifact
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download rustc docs
+        run: |
+          rustup install ${{ env.TOOLCHAIN }} --profile minimal
+          rustup default ${{ env.TOOLCHAIN }}
+          rustup component add rustc-docs
+          ls -alh ~/.rustup/toolchains/nightly-2021-10-21-x86_64-unknown-linux-gnu/share/doc/rust/html
+
+      - name: Upload static files as artifact
+        id: deployment
+        uses: actions/upload-pages-artifact@v3 # or specific "vX.X.X" version tag for this action
+        with:
+          path: ~/.rustup/toolchains/nightly-2021-10-21-x86_64-unknown-linux-gnu/share/doc/rust/html/rustc
+
+  # Deployment job
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
+    permissions:
+      pages: write      # to deploy to Pages
+      id-token: write   # to verify the deployment originates from an appropriate source
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
