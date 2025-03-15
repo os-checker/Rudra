@@ -25,7 +25,7 @@ jobs:
         id: deployment
         uses: actions/upload-pages-artifact@v3 # or specific "vX.X.X" version tag for this action
         with:
-          path: ~/.rustup/toolchains/nightly-2021-10-21-x86_64-unknown-linux-gnu/share/doc/rust/html/rustc
+          path: ~/.rustup/toolchains/nightly-2021-10-21-x86_64-unknown-linux-gnu/share/doc/rust/html
 
   # Deployment job
   deploy:
