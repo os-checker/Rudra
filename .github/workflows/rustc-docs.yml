@@ -13,22 +13,30 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Download rustc docs
-        id: build
+      - name: Build Rudra API docs
         run: |
-          rm rust-toolchain.toml
-          rustup install ${{ env.TOOLCHAIN }} --profile minimal
-          rustup default ${{ env.TOOLCHAIN }}
-          rustup component add rustc-docs
+          mkdir doc
+          # /rudra/index.html
+          mv .github/index.html doc
+          cargo doc --document-private-items --no-deps
+          # /rudra/rudra/index.html
+          mv target/doc doc/rudra
+
+      - name: Download rustc internal API docs
+        run: |
           ls -alh ~/.rustup/toolchains/nightly-2021-10-21-x86_64-unknown-linux-gnu/share/doc/rust/html
-          ls -alh ~/.rustup/toolchains/nightly-2021-10-21-x86_64-unknown-linux-gnu/share/doc/rust/html/rustc
-          mv ~/.rustup/toolchains/nightly-2021-10-21-x86_64-unknown-linux-gnu/share/doc/rust/html/rustc rustc
+          # remove rustc book
+          rm ~/.rustup/toolchains/nightly-2021-10-21-x86_64-unknown-linux-gnu/share/doc/rust/html/rustc -r || true
+          # download rustc API docs
+          rustup component add rustc-docs
+          # /rudra/rudra/rustc.html
+          mv ~/.rustup/toolchains/nightly-2021-10-21-x86_64-unknown-linux-gnu/share/doc/rust/html/rustc doc/rustc
 
       - name: Upload static files as artifact
         id: deployment
         uses: actions/upload-pages-artifact@v3 # or specific "vX.X.X" version tag for this action
         with:
-          path: rustc
+          path: doc
 
   # Deployment job
   deploy:
